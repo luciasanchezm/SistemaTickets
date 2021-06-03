@@ -24,34 +24,34 @@ const agregarTicket = (req, res) => {
 		if (!ticket.personal) {
 			return res
 				.status(400)
-				.send({error: true, mensaje: "Campo 'personal' no puede estar vacío."});
+				.send({ok: false, mensaje: "Campo 'personal' no puede estar vacío."});
 		}
 		if (!existePersonal(ticket.personal)) {
 			return res.status(400).send({
-				error: true,
+				ok: false,
 				mensaje: `El personal con el id ${ticket.personal} no existe.`,
 			});
 		}
 		if (!ticket.categoria) {
 			return res
 				.status(400)
-				.send({error: true, mensaje: "Campo 'categoria' no puede estar vacío."});
+				.send({ok: false, mensaje: "Campo 'categoria' no puede estar vacío."});
 		}
 		if (!existeCategoria(ticket.categoria)) {
 			return res.status(400).send({
-				error: true,
+				ok: false,
 				mensaje: `La categoría con el id ${ticket.personal} no existe.`,
 			});
 		}
 		if (!ticket.nombre) {
 			return res
 				.status(400)
-				.send({error: true, mensaje: "Campo 'nombre' no puede estar vacío."});
+				.send({ok: false, mensaje: "Campo 'nombre' no puede estar vacío."});
 		}
 		if (!ticket.prioridad) {
 			return res
 				.status(400)
-				.send({error: true, mensaje: "Campo 'prioridad' no puede estar vacío."});
+				.send({ok: false, mensaje: "Campo 'prioridad' no puede estar vacío."});
 		}
 
 		const sql = "INSERT INTO personal set ?";
@@ -60,7 +60,7 @@ const agregarTicket = (req, res) => {
 			if (err) {
 				console.log(err);
 			} else {
-				res.json({error: false, data, mensaje: "Ticket creado con éxito."});
+				res.json({ok: true, data, mensaje: "Ticket creado con éxito."});
 			}
 		});
 	}
@@ -84,7 +84,7 @@ const editarTicket = (req, res) => {
 					mensaje = "Ticket actualizado con exito.";
 				}
 
-				res.json({error: false, data, mensaje});
+				res.json({ok: true, data, mensaje});
 			}
 		});
 	}
@@ -108,7 +108,7 @@ const cambiarTicketEstatus = (req, res) => {
 					mensaje = "Estatus actualizado con exito.";
 				}
 
-				res.json({error: false, data, mensaje});
+				res.json({ok: true, data, mensaje});
 			}
 		});
 	}
