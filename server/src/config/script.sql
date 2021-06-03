@@ -3,9 +3,9 @@ create database tickets_system;
 use tickets_system;
 
 create table categorias(id int auto_increment primary key, 
-					   nombre varchar(50) not null);
+					    nombre varchar(50) not null);
                        
-create table personas( id int auto_increment primary key, 
+create table personal(id int auto_increment primary key, 
 					  nombre varchar(50) not null,
                       apellidos varchar(80) not null,
                       telefono char(10),
