@@ -5,13 +5,13 @@ const categoriasRoutes = express.Router();
 const {
 	listarCategorias,
 	agregarCategoria,
-	borrarCategoria,
+	eliminarCategoria,
 } = require("../controllers/categoriasController");
 
 categoriasRoutes.get("/categorias", listarCategorias);
 
 categoriasRoutes.post("/categoria", agregarCategoria);
 
-categoriasRoutes.delete("/categoria/:id", borrarCategoria);
+categoriasRoutes.delete("/categoria/:id", eliminarCategoria);
 
 module.exports = categoriasRoutes;
