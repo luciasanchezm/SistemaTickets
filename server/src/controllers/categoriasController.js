@@ -14,7 +14,7 @@ const listarCategorias = (req, res) => {
 	}
 };
 
-const borrarCategoria = (req, res) => {
+const eliminarCategoria = (req, res) => {
 	const {id} = req.params;
 	if (existeCategoria(id)) return res.json({mensaje: "No existe la categoría."});
 	if (connection) {
@@ -36,9 +36,7 @@ const agregarCategoria = (req, res) => {
 		const {nombre} = req.body;
 
 		if (!nombre) {
-			return res
-				.status(400)
-				.send({error: true, mensaje: "Campo nombre no puede estar vacío."});
+			return res.status(400).send({ok: false, mensaje: "Campo nombre no puede estar vacío."});
 		}
 
 		const sql = "INSERT INTO categorias set ?";
@@ -47,7 +45,7 @@ const agregarCategoria = (req, res) => {
 			if (err) {
 				console.log(err);
 			} else {
-				res.json({error: false, data, mensaje: "Categoría creada con éxito."});
+				res.json({ok: true, data, mensaje: "Categoría creada con éxito."});
 			}
 		});
 	}
@@ -67,6 +65,5 @@ const existeCategoria = (id) => {
 module.exports = {
 	listarCategorias,
 	agregarCategoria,
-	existeCategoria,
-	borrarCategoria,
+	eliminarCategoria,
 };
