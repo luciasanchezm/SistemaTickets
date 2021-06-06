@@ -1,6 +1,6 @@
 const connection = require("../config/connection");
-const {existePersona} = require("./personalController");
-const {existeCategoria} = require("./categoriasController");
+const { existePersona } = require("./personalController");
+const { existeCategoria } = require("./categoriasController");
 
 const listarTickets = (req, res) => {
 	if (connection) {
@@ -16,7 +16,7 @@ const listarTickets = (req, res) => {
 };
 
 const ticketPorId = (req, res) => {
-	const {id} = req.params;
+	const { id } = req.params;
 	if (connection) {
 		let sql = "SELECT * FROM tickets WHERE id = ?";
 		connection.query(sql, [id], (err, tickets) => {
@@ -36,7 +36,7 @@ const agregarTicket = (req, res) => {
 		if (!ticket.persona_id) {
 			return res
 				.status(400)
-				.send({ok: false, mensaje: "Campo 'personal' no puede estar vacío."});
+				.send({ ok: false, mensaje: "Campo 'personal' no puede estar vacío." });
 		}
 		if (!existePersona(ticket.persona_id)) {
 			return res.status(400).send({
@@ -47,7 +47,7 @@ const agregarTicket = (req, res) => {
 		if (!ticket.categoria_id) {
 			return res
 				.status(400)
-				.send({ok: false, mensaje: "Campo 'categoria' no puede estar vacío."});
+				.send({ ok: false, mensaje: "Campo 'categoria' no puede estar vacío." });
 		}
 		if (!existeCategoria(ticket.categoria_id)) {
 			return res.status(400).send({
@@ -58,12 +58,12 @@ const agregarTicket = (req, res) => {
 		if (!ticket.nombre) {
 			return res
 				.status(400)
-				.send({ok: false, mensaje: "Campo 'nombre' no puede estar vacío."});
+				.send({ ok: false, mensaje: "Campo 'nombre' no puede estar vacío." });
 		}
 		if (!ticket.prioridad) {
 			return res
 				.status(400)
-				.send({ok: false, mensaje: "Campo 'prioridad' no puede estar vacío."});
+				.send({ ok: false, mensaje: "Campo 'prioridad' no puede estar vacío." });
 		}
 
 		const sql = "INSERT INTO tickets set ?";
@@ -72,7 +72,7 @@ const agregarTicket = (req, res) => {
 			if (err) {
 				console.log(err);
 			} else {
-				res.json({ok: true, data, mensaje: "Ticket creado con éxito."});
+				res.json({ ok: true, data, mensaje: "Ticket creado con éxito." });
 			}
 		});
 	}
@@ -80,7 +80,7 @@ const agregarTicket = (req, res) => {
 
 const editarTicket = (req, res) => {
 	if (connection) {
-		const {id} = req.params;
+		const { id } = req.params;
 		const ticket = req.body;
 
 		let sql = "UPDATE tickets set ? WHERE id = ?";
@@ -96,22 +96,22 @@ const editarTicket = (req, res) => {
 					mensaje = "Ticket actualizado con exito.";
 				}
 
-				res.json({ok: true, data, mensaje});
+				res.json({ ok: true, data, mensaje });
 			}
 		});
 	}
 };
 
 const eliminarTicket = (req, res) => {
-	const {id} = req.params;
-	if (!existeTicket(id)) return res.json({mensaje: "No existe el ticket."});
+	const { id } = req.params;
+	if (!existeTicket(id)) return res.json({ mensaje: "No existe el ticket." });
 	if (connection) {
 		let sql = "DELETE FROM tickets WHERE id = ?";
 		connection.query(sql, [id], (err, tickets) => {
 			if (err) {
 				res.status(400).json(err);
 			} else {
-				res.json(tickets);
+				res.json({ mensaje: "Ticket eliminado con éxito.", tickets });
 			}
 		});
 	}
@@ -119,7 +119,7 @@ const eliminarTicket = (req, res) => {
 
 const cambiarTicketEstatus = (req, res) => {
 	if (connection) {
-		const {id} = req.params;
+		const { id } = req.params;
 		const estatus = req.body;
 
 		let sql = "UPDATE tickets set estatus = ? WHERE id = ?";
@@ -135,7 +135,22 @@ const cambiarTicketEstatus = (req, res) => {
 					mensaje = "Estatus actualizado con exito.";
 				}
 
-				res.json({ok: true, data, mensaje});
+				res.json({ ok: true, data, mensaje });
+			}
+		});
+	}
+};
+
+const filtrarPorCategoria = async (req, res) => {
+	const { id } = req.params;
+	let sql = "SELECT * FROM tickets";
+	if (id !== "-1") sql += " WHERE categoria_id = ?";
+	if (connection) {
+		connection.query(sql, [id], (err, tickets) => {
+			if (err) {
+				res.status(400).json(err);
+			} else {
+				res.json(tickets);
 			}
 		});
 	}
@@ -159,4 +174,5 @@ module.exports = {
 	editarTicket,
 	eliminarTicket,
 	cambiarTicketEstatus,
+	filtrarPorCategoria,
 };

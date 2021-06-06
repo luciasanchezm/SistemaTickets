@@ -7,7 +7,6 @@ const listarCategorias = (req, res) => {
 			if (err) {
 				res.status(400).json(err);
 			} else {
-				console.log(categorias);
 				res.json(categorias);
 			}
 		});
@@ -15,16 +14,15 @@ const listarCategorias = (req, res) => {
 };
 
 const eliminarCategoria = (req, res) => {
-	const {id} = req.params;
-	if (existeCategoria(id)) return res.json({mensaje: "No existe la categoría."});
+	const { id } = req.params;
+	if (!existeCategoria(id)) return res.json({ mensaje: "No existe la categoría." });
 	if (connection) {
 		let sql = "DELETE FROM categorias WHERE id = ?";
 		connection.query(sql, [id], (err, categorias) => {
 			if (err) {
 				res.status(400).json(err);
 			} else {
-				console.log(categorias);
-				res.json(categorias);
+				res.json({ mensaje: "Categoría eliminada con éxito.", categorias });
 			}
 		});
 	}
@@ -32,19 +30,19 @@ const eliminarCategoria = (req, res) => {
 
 const agregarCategoria = (req, res) => {
 	if (connection) {
-		const {nombre} = req.body;
+		const { nombre } = req.body;
 
 		if (!nombre) {
-			return res.status(400).send({ok: false, mensaje: "Campo nombre no puede estar vacío."});
+			return res.status(400).send({ ok: false, mensaje: "Campo nombre no puede estar vacío." });
 		}
 
 		const sql = "INSERT INTO categorias set ?";
 
-		connection.query(sql, [{nombre}], (err, data) => {
+		connection.query(sql, [{ nombre }], (err, data) => {
 			if (err) {
 				console.log(err);
 			} else {
-				res.json({ok: true, data, mensaje: "Categoría creada con éxito."});
+				res.json({ ok: true, data, mensaje: "Categoría creada con éxito." });
 			}
 		});
 	}

@@ -14,7 +14,7 @@ const listarPersonal = (req, res) => {
 };
 
 const personaPorId = (req, res) => {
-	const {id} = req.params;
+	const { id } = req.params;
 	if (connection) {
 		let sql = "SELECT * FROM personal WHERE id = ?";
 		connection.query(sql, [id], (err, persona) => {
@@ -34,12 +34,12 @@ const agregarPersona = (req, res) => {
 		if (!personal.nombre) {
 			return res
 				.status(400)
-				.send({ok: false, mensaje: "Campo 'nombre' no puede estar vacío."});
+				.send({ ok: false, mensaje: "Campo 'nombre' no puede estar vacío." });
 		}
 		if (!personal.apellidos) {
 			return res
 				.status(400)
-				.send({ok: false, mensaje: "Campo 'apellidos' no puede estar vacío."});
+				.send({ ok: false, mensaje: "Campo 'apellidos' no puede estar vacío." });
 		}
 
 		const sql = "INSERT INTO personal set ?";
@@ -48,7 +48,7 @@ const agregarPersona = (req, res) => {
 			if (err) {
 				console.log(err);
 			} else {
-				res.json({ok: true, data, mensaje: "Persona creada con éxito."});
+				res.json({ ok: true, data, mensaje: "Persona creada con éxito." });
 			}
 		});
 	}
@@ -56,7 +56,7 @@ const agregarPersona = (req, res) => {
 
 const editarPersona = (req, res) => {
 	if (connection) {
-		const {id} = req.params;
+		const { id } = req.params;
 		const persona = req.body;
 
 		let sql = "UPDATE personal set ? WHERE id = ?";
@@ -72,22 +72,22 @@ const editarPersona = (req, res) => {
 					mensaje = "Persona actualizada con éxito.";
 				}
 
-				res.json({ok: true, data, mensaje});
+				res.json({ ok: true, data, mensaje });
 			}
 		});
 	}
 };
 
 const eliminarPersona = (req, res) => {
-	const {id} = req.params;
-	if (existePersona(id)) return res.json({mensaje: "No existe la persona."});
+	const { id } = req.params;
+	if (!existePersona(id)) return res.json({ mensaje: "No existe la persona." });
 	if (connection) {
 		let sql = "DELETE FROM personal WHERE id = ?";
 		connection.query(sql, [id], (err, personal) => {
 			if (err) {
 				res.status(400).json(err);
 			} else {
-				res.json(personal);
+				res.json({ mensaje: "Persona eliminada con éxito.", personal });
 			}
 		});
 	}
