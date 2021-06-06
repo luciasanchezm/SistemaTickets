@@ -15,14 +15,15 @@ export default new Vuex.Store({
 		SET_CATEGORIAS(state, categorias) {
 			state.categorias = categorias;
 		},
-		SET_CATEGORIAS_POR_NOMBRE(state, categorias) {
+		SET_CATEGORIAS_POR_NOMBRE(state, { categorias, all }) {
 			categorias = categorias.map((categoria) => {
 				return {
 					value: categoria.id,
 					text: categoria.nombre,
 				};
 			});
-			categorias.unshift({value: "", text: "Seleccione una opción...", disabled: true});
+			if (all) categorias.unshift({ value: "-1", text: "Todas las categorías" });
+			else categorias.unshift({ value: "", text: "Seleccione una opción...", disabled: true });
 			state.categorias = categorias;
 		},
 		SET_PERSONAL(state, personal) {
@@ -35,7 +36,7 @@ export default new Vuex.Store({
 					text: `${persona.nombre} ${persona.apellidos}`,
 				};
 			});
-			personal.unshift({value: "", text: "Seleccione una opción...", disabled: true});
+			personal.unshift({ value: "", text: "Seleccione una opción...", disabled: true });
 			state.personal = personal;
 		},
 		SET_TICKETS(state, tickets) {
@@ -56,13 +57,13 @@ export default new Vuex.Store({
 	},
 	actions: {
 		// ===================== CATEGORÍAS ============================
-		agregarCategoria({commit}, {params, onComplete, onError}) {
+		agregarCategoria({ commit }, { params, onComplete, onError }) {
 			axios
 				.post("http://localhost:3000/categoria", params)
 				.then(onComplete)
 				.catch(onError);
 		},
-		listarCategorias({commit}) {
+		listarCategorias({ commit }) {
 			commit("SET_LOADING", true);
 			axios
 				.get("http://localhost:3000/categorias")
@@ -71,16 +72,16 @@ export default new Vuex.Store({
 				})
 				.finally(() => commit("SET_LOADING", false));
 		},
-		listarCategoriasPorNombre({commit}) {
+		listarCategoriasPorNombre({ commit }, { all }) {
 			commit("SET_LOADING", true);
 			axios
 				.get("http://localhost:3000/categorias")
 				.then((response) => {
-					commit("SET_CATEGORIAS_POR_NOMBRE", response.data);
+					commit("SET_CATEGORIAS_POR_NOMBRE", { categorias: response.data, all });
 				})
 				.finally(() => commit("SET_LOADING", false));
 		},
-		eliminarCategoria({commit}, {id, onComplete, onError}) {
+		eliminarCategoria({ commit }, { id, onComplete, onError }) {
 			axios
 				.delete(`http://localhost:3000/categoria/${id}`)
 				.then(onComplete)
@@ -88,13 +89,13 @@ export default new Vuex.Store({
 		},
 		// ===================== FIN CATEGORÍAS ============================
 		// =========================  PERSONAL ============================
-		agregarPersona({commit}, {params, onComplete, onError}) {
+		agregarPersona({ commit }, { params, onComplete, onError }) {
 			axios
 				.post("http://localhost:3000/personal", params)
 				.then(onComplete)
 				.catch(onError);
 		},
-		listarPersonal({commit}) {
+		listarPersonal({ commit }) {
 			commit("SET_LOADING", true);
 			axios
 				.get("http://localhost:3000/personal")
@@ -103,7 +104,7 @@ export default new Vuex.Store({
 				})
 				.finally(() => commit("SET_LOADING", false));
 		},
-		listarPersonalPorNombre({commit}) {
+		listarPersonalPorNombre({ commit }) {
 			commit("SET_LOADING", true);
 			axios
 				.get("http://localhost:3000/personal")
@@ -112,19 +113,19 @@ export default new Vuex.Store({
 				})
 				.finally(() => commit("SET_LOADING", false));
 		},
-		editarPersona({commit}, {id, params, onComplete, onError}) {
+		editarPersona({ commit }, { id, params, onComplete, onError }) {
 			axios
 				.put(`http://localhost:3000/personal/${id}`, params)
 				.then(onComplete)
 				.catch(onError);
 		},
-		obtenerPersona({commit}, {id, onComplete, onError}) {
+		obtenerPersona({ commit }, { id, onComplete, onError }) {
 			axios
 				.get(`http://localhost:3000/personal/${id}`)
 				.then(onComplete)
 				.catch(onError);
 		},
-		eliminarPersona({commit}, {id, onComplete, onError}) {
+		eliminarPersona({ commit }, { id, onComplete, onError }) {
 			axios
 				.delete(`http://localhost:3000/personal/${id}`)
 				.then(onComplete)
@@ -132,13 +133,13 @@ export default new Vuex.Store({
 		},
 		// ==========================  END PERSONAL =================================
 		// ==========================  TICKETS =================================
-		agregarTicket({commit}, {params, onComplete, onError}) {
+		agregarTicket({ commit }, { params, onComplete, onError }) {
 			axios
 				.post("http://localhost:3000/tickets", params)
 				.then(onComplete)
 				.catch(onError);
 		},
-		listarTickets({commit}) {
+		listarTickets({ commit }) {
 			commit("SET_LOADING", true);
 			axios
 				.get("http://localhost:3000/tickets")
@@ -147,23 +148,32 @@ export default new Vuex.Store({
 				})
 				.finally(() => commit("SET_LOADING", false));
 		},
-		editarTicket({commit}, {id, params, onComplete, onError}) {
+		editarTicket({ commit }, { id, params, onComplete, onError }) {
 			axios
 				.put(`http://localhost:3000/tickets/${id}`, params)
 				.then(onComplete)
 				.catch(onError);
 		},
-		obtenerTicket({commit}, {id, onComplete, onError}) {
+		obtenerTicket({ commit }, { id, onComplete, onError }) {
 			axios
 				.get(`http://localhost:3000/tickets/${id}`)
 				.then(onComplete)
 				.catch(onError);
 		},
-		eliminarTicket({commit}, {id, onComplete, onError}) {
+		eliminarTicket({ commit }, { id, onComplete, onError }) {
 			axios
 				.delete(`http://localhost:3000/tickets/${id}`)
 				.then(onComplete)
 				.catch(onError);
+		},
+		filtrarTicketsPorCategoria({ commit }, id) {
+			commit("SET_LOADING", true);
+			axios
+				.get(`http://localhost:3000/filtrarTickets/${id}`)
+				.then((response) => {
+					commit("SET_TICKETS", response.data);
+				})
+				.finally(() => commit("SET_LOADING", false));
 		},
 
 		// ==========================  END TICKETS =================================
