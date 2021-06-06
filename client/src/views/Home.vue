@@ -18,11 +18,15 @@
 			</div>
 		</div>
 
-		<b-card-group class="fadeInUp delayed-02" columns>
-			<div class="m-3 col-3" v-for="ticket in tickets" v-bind:key="ticket.id">
+		<b-card-group columns>
+			<div
+				class="m-3 col-3 fadeInUp delayed-02"
+				v-for="ticket in tickets"
+				v-bind:key="ticket.id"
+			>
 				<Card class="fadeInUp" :key="ticket.id" :ticket="ticket" />
 			</div>
-			<div :key="'noinfo'" v-if="tickets.length === 0" class="mt-3">
+			<div class="fadeInUp mt-3" :key="'noinfo'" v-if="tickets.length === 0">
 				<b-alert show variant="info">No hay tickets con la categoría seleccionada.</b-alert>
 			</div>
 		</b-card-group>
@@ -65,12 +69,11 @@ export default {
 <style>
 div.m-3 {
 	display: inline-block;
-	box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
 	transition: 0.2s;
 }
 
 div.m-3:hover {
-	transform: translateY(-6px);
+	box-shadow: 0 8px 8px rgba(0, 0, 0, 0.2);
 	cursor: pointer;
 }
 </style>
