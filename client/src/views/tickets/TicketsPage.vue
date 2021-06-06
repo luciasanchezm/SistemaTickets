@@ -1,11 +1,17 @@
 <template>
 	<div>
-		<h1>Tickets</h1>
-		<b-button variant="primary" to="/tickets/agregar"
+		<h1 class="fadeInDown">Tickets</h1>
+		<b-button class="bounceIn delayed-01" variant="primary" to="/tickets/agregar"
 			><font-awesome-icon icon="plus"
 		/></b-button>
 
-		<Table emptyText="No hay tickets." :items="tickets" :fields="campos" :busy="loading">
+		<Table
+			class="fadeInUp delayed-02"
+			emptyText="No hay tickets."
+			:items="tickets"
+			:fields="campos"
+			:busy="loading"
+		>
 			<template slot="actions" slot-scope="{item}">
 				<b-button variant="success" class="me-1" @click="onCambiarEstatus(item)">
 					<font-awesome-icon icon="sync-alt" />

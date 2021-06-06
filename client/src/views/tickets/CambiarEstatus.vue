@@ -1,7 +1,7 @@
 <template>
 	<div>
-		<h1>Cambiar Estatus</h1>
-		<b-form @submit.prevent="guardarTicket()">
+		<h1 class="fadeInDown">Cambiar Estatus</h1>
+		<b-form class="mt-3 fadeInRight delayed-02" @submit.prevent="guardarTicket()">
 			<Input id="id" v-model="$route.params.id" titulo="ID" class="row" disabled />
 
 			<div class="mb-3 row">
